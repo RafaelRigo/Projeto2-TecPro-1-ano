@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.io.*;
 import java.util.Scanner;
 import static java.lang.System.*;
 
@@ -6,20 +7,22 @@ public class Manutencao {
     enum Ordens {porRa, porNome, porCurso, porMedia}
     private static Ordens ordemAtual = Ordens.porRa;
     private static ManterEstudantes estud;
+    private static String[] disciplinas;
+    private static int qtsDisciplinas;
+
     static Scanner leitor = new Scanner(in);
-    static boolean continuarPrograma = true;
 
     public static void main(String[] args) throws Exception {
         estud = new ManterEstudantes();
-        estud.dados = new Estudante[3];
-        for (int i = 0; i < 3; i++)
-            estud.dados[i] = new Estudante();
-        estud.qtosDados = 0;
+
+        lerDisciplinas();
+        for (int i = 0; i < qtsDisciplinas; i++)
+            out.println(disciplinas[i]);
+
         estud.leituraDosDados("DadosEstudantes.txt");
-        if (continuarPrograma) {
-            seletorDeOpcoes();
-            estud.gravarDados("DadosEstudantes.txt");
-        }
+        seletorDeOpcoes();
+        estud.gravarDados("DadosEstudantes.txt");
+
         out.println("\nPrograma encerrado.");
     }
 
@@ -39,7 +42,7 @@ public class Manutencao {
             out.print("\nSua opção: ");
             opcao = leitor.nextInt();
             leitor.nextLine();
-            switch(opcao) {
+            switch (opcao) {
                 case 1 : incluirEstudante(); break;
                 case 2 : listarEstudantes(); break;
                 case 3 : excluirEstudante(); break;
@@ -51,6 +54,33 @@ public class Manutencao {
             }
         }
         while (opcao != 0);
+    }
+
+    public static void lerDisciplinas() throws FileNotFoundException {
+        disciplinas = new String[15];
+        try {
+            BufferedReader arq = new BufferedReader(new FileReader("DadosDisciplinas.txt"));
+            try {
+                String linha = arq.readLine();
+                int inicio = 0;
+                boolean parar = false;
+                if (linha != null) {
+                    while (!parar && qtsDisciplinas < 15) {
+                        if (linha.length() < inicio + 6)
+                            parar = true;
+                        else {
+                            disciplinas[qtsDisciplinas] = linha.substring(inicio, inicio + 6);
+                            qtsDisciplinas++;
+                            inicio += 6;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void incluirEstudante() throws Exception {
@@ -67,24 +97,13 @@ public class Manutencao {
         Estudante umEstudante = new Estudante(curso, ra, nome);
         if (estud.existe(umEstudante))
           JOptionPane.showMessageDialog(null,"Estudante repetido!");
-        else
-        {
+        else {
             incluirEmOrdem(umEstudante);
         }
     }
 
-    private static void expandirVetor() {
-        Estudante[] novoVetor = new Estudante[estud.dados.length * 2];
-        for (int i = 0; i <estud.qtosDados; i++)
-            novoVetor[i] = estud.dados[i];
-        estud.dados = novoVetor;
-    }
-
     private static void incluirEmOrdem(Estudante novo) {
-        if (estud.qtosDados >= estud.dados.length)
-            expandirVetor();
         estud.incluirEm(novo, estud.posicaoAtual);
-        estud.qtosDados++;
     }
 
     public static void excluirEstudante() throws Exception {
@@ -100,12 +119,35 @@ public class Manutencao {
             estud.excluir(estud.posicaoAtual);
         }
     }
+
     public static void listarEstudantes() {
+        String qtsSep = "+%s".repeat(5);
+        String sepDisc = "--------+".repeat(qtsDisciplinas);
+        String separador = String.format(
+                qtsSep,
+                "-".repeat(7),
+                "-".repeat(7),
+                "-".repeat(32),
+                "-".repeat(4),
+                sepDisc
+        );
+
         out.println("\n\nListagem de Estudantes\n");
+        out.println(separador);
+        out.printf("| Curso | %-5s | %-30s | QN |", "RA", "Nome");
+        for (int i = 0; i < qtsDisciplinas; i++)
+            out.printf(" %6s |", disciplinas[i]);
+        out.println();
+
         int contLinha = 0;
-        for (int i = 0; i < estud.qtosDados; i++)
-        {
-            out.println(estud.dados[i]);
+        for (int i = 0; i < estud.qtosDados; i++) {
+            Estudante est = estud.valorDe(i);
+            out.println(separador);
+            out.printf("| %-5s | %-5s | %-30s | %-2d |",
+                    est.getCurso(), est.getRa(), est.getNome(), est.getQuantasNotas());
+            for (int j = 0; j < qtsDisciplinas; j++)
+                out.printf(" %-6.1f |", est.getNotas()[j]);
+            out.println();
 
             if (++contLinha >= 20) {
                 out.print("\n\nTecle [Enter] para prosseguir: ");
@@ -113,12 +155,32 @@ public class Manutencao {
                 contLinha = 0;
             }
         }
+        out.println(separador);
         out.print("\n\nTecle [Enter] para prosseguir: ");
         leitor.nextLine();
     }
 
     public static void listarSituacoes() {
+        String qtsSep = "+%s".repeat(7);
+        String sepDisc = "--------+".repeat(qtsDisciplinas);
+        String separador = String.format(
+                qtsSep,
+                "-".repeat(7),
+                "-".repeat(18),
+                "-".repeat(7),
+                "-".repeat(7),
+                "-".repeat(32),
+                "-".repeat(4),
+                sepDisc
+        );
+
         out.println("\n\nSituação estudantil\n");
+        out.println(separador);
+        out.printf("| Média | %-16s | Curso | %-5s | %-30s | QN |", "Situacao", "RA", "Nome");
+        for (int i = 0; i < qtsDisciplinas; i++)
+            out.printf(" %6s |", disciplinas[i]);
+        out.println();
+
         String situacao;
         for (int i = 0; i < estud.qtosDados; i++)
         {
@@ -128,10 +190,15 @@ public class Manutencao {
             else
                 situacao = "Promovido(a)    ";
 
-            out.printf(
-                    "%4.1f %16s "+estud.dados[i]+"\n", mediaDesseEstudante,
-                    situacao);
+            Estudante est = estud.valorDe(i);
+            out.println(separador);
+            out.printf("| %-5.2f | %-16s | %-5s | %-5s | %-30s | %-2d |",
+                    mediaDesseEstudante, situacao, est.getCurso(), est.getRa(), est.getNome(), est.getQuantasNotas());
+            for (int j = 0; j < qtsDisciplinas; j++)
+                out.printf(" %-6.1f |", est.getNotas()[j]);
+            out.println();
         }
+        out.println(separador);
         out.print("\n\nTecle [Enter] para prosseguir: ");
         leitor.nextLine();
     }
@@ -139,36 +206,34 @@ public class Manutencao {
     private static void ordenarPorCurso() {
         for (int i = 0; i < estud.qtosDados; i++)
             for (int j = i + 1; j < estud.qtosDados; j++)
-                if (estud.dados[i].getCurso().compareTo(estud.dados[j].getCurso()) > 0)
+                if (estud.valorDe(i).getCurso().compareTo(estud.valorDe(j).getCurso()) > 0)
                     estud.trocar(i, j);
         ordemAtual = Ordens.porCurso;
     }
 
     private static void ordenarPorRa() {
-        for (int i = 0; i < estud.qtosDados; i++)
-            for (int j = i + 1; j < estud.qtosDados; j++)
-                if (estud.dados[i].getRa().compareTo(estud.dados[j].getRa()) > 0)
-                    estud.trocar(i, j);
+        estud.ordenar();
         ordemAtual = Ordens.porRa;
     }
 
     private static void ordenarPorNome() {
         for (int i = 0; i < estud.qtosDados; i++)
             for (int j = i + 1; j < estud.qtosDados; j++)
-                if (estud.dados[i].getNome().compareTo(estud.dados[j].getNome()) > 0)
+                if (estud.valorDe(i).getNome().compareTo(estud.valorDe(j).getNome()) > 0)
                     estud.trocar(i, j);
         ordemAtual = Ordens.porNome;
     }
 
     private static void ordenarPorMedia() {
         for (int i = 0; i < estud.qtosDados; i++) {
-            double mediaAtual = estud.dados[i].mediaDasNotas();
+            double mediaAtual = estud.valorDe(i).mediaDasNotas();
             for (int j = i + 1; j < estud.qtosDados; j++)
-                if (mediaAtual > estud.dados[j].mediaDasNotas())
+                if (mediaAtual > estud.valorDe(j).mediaDasNotas())
                     estud.trocar(i, j);
             ordemAtual = Ordens.porMedia;
         }
     }
+
     private static void digitarNotas() {
         out.println("Digitação de notas de estudante:\n");
         out.print("Digite o RA do(a) estudante desejado(a): ");

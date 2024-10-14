@@ -5,16 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e2565a8a-53e1-4514-baf7-b94bc01a8436" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Projeto2-TecPro-1-ano.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DadosEstudantes.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Estudante.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ManterDados.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ManterEstudantes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Manutencao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DadosDisciplinas.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DadosEstudantes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DadosEstudantes.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ManterDados.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ManterEstudantes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ManterEstudantes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manutencao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manutencao.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -43,18 +39,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Manutencao.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/RRigo/Documents/GitHub/Projeto2-TecPro-1-ano",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Manutencao.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/RRigo/Documents/GitHub/Projeto2-TecPro-1-ano&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\RRigo\Documents\GitHub\Projeto2-TecPro-1-ano\src" />
