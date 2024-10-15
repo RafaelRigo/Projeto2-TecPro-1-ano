@@ -16,9 +16,6 @@ public class Manutencao {
         estud = new ManterEstudantes();
 
         lerDisciplinas();
-        for (int i = 0; i < qtsDisciplinas; i++)
-            out.println(disciplinas[i]);
-
         estud.leituraDosDados("DadosEstudantes.txt");
         seletorDeOpcoes();
         estud.gravarDados("DadosEstudantes.txt");
@@ -39,6 +36,7 @@ public class Manutencao {
             out.println("6 - Ordenar por curso");
             out.println("7 - Ordenar por nome");
             out.println("8 - Ordenar por média");
+            out.println("9 - Estatísticas");
             out.print("\nSua opção: ");
             opcao = leitor.nextInt();
             leitor.nextLine();
@@ -51,6 +49,7 @@ public class Manutencao {
                 case 6 : ordenarPorCurso(); break;
                 case 7 : ordenarPorNome(); break;
                 case 8 : ordenarPorMedia(); break;
+                case 9 : estatisticas(); break;
             }
         }
         while (opcao != 0);
@@ -145,8 +144,15 @@ public class Manutencao {
             out.println(separador);
             out.printf("| %-5s | %-5s | %-30s | %-2d |",
                     est.getCurso(), est.getRa(), est.getNome(), est.getQuantasNotas());
-            for (int j = 0; j < qtsDisciplinas; j++)
-                out.printf(" %-6.1f |", est.getNotas()[j]);
+            for (int j = 0; j < est.getQuantasNotas(); j++) {
+                if (j < qtsDisciplinas)
+                    out.printf(" %-6.1f |", est.getNotas()[j]);
+                else {
+                    if (j == qtsDisciplinas)
+                        out.print(" Notas não alocadas:");
+                    out.printf(" %s,", est.getNotas()[j]);
+                }
+            }
             out.println();
 
             if (++contLinha >= 20) {
@@ -194,8 +200,15 @@ public class Manutencao {
             out.println(separador);
             out.printf("| %-5.2f | %-16s | %-5s | %-5s | %-30s | %-2d |",
                     mediaDesseEstudante, situacao, est.getCurso(), est.getRa(), est.getNome(), est.getQuantasNotas());
-            for (int j = 0; j < qtsDisciplinas; j++)
-                out.printf(" %-6.1f |", est.getNotas()[j]);
+            for (int j = 0; j < est.getQuantasNotas(); j++) {
+                if (j < qtsDisciplinas)
+                    out.printf(" %-6.1f |", est.getNotas()[j]);
+                else {
+                    if (j == qtsDisciplinas)
+                        out.print(" Notas não alocadas:");
+                    out.printf(" %s,", est.getNotas()[j]);
+                }
+            }
             out.println();
         }
         out.println(separador);
@@ -265,5 +278,166 @@ public class Manutencao {
             out.println("Não foi possivel criar objeto Estudante.");
             out.println(erro.getMessage());
         }
+    }
+
+    private static void estatisticas() {
+        out.println("\n\nESTATÍSTICAS\n");
+
+        out.printf("Disciplina com maior número de aprovações:  %s\n", maiorAprovacao());
+        out.printf("Disciplina com maior número de reprovações: %s\n\n", maiorReprovacao());
+
+        out.printf("Estudante com maior média de notas:        %s\n", estudMaiorMedia().getNome());
+        out.printf("Disciplina com maior nota deste estudante: %s\n", maiorNota());
+        out.printf("Disciplina com menor nota deste estudante: %s\n\n", menorNota());
+
+        mediasEstudantes();
+
+        out.printf("Aluno com maior nota da disciplina com menor média: %s\n", maiorNotaMenorMedia().getNome());
+        out.printf("Aluno com menor nota da disciplina com maior média: %s\n", menorNotaMaiorMedia().getNome());
+
+        out.print("\n\nTecle [Enter] para prosseguir: ");
+        leitor.nextLine();
+    }
+
+    private static String maiorAprovacao() {
+        int indDisc = 0;
+        int maior = 0;
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            int cont = 0;
+            for (int j = 0; j < estud.qtosDados; j++) {
+                if (estud.valorDe(j).getNotas()[i] >= 5)
+                    cont++;
+            }
+            if (cont > maior) {
+                maior = cont;
+                indDisc = i;
+            }
+        }
+        return disciplinas[indDisc];
+    }
+
+    private static String maiorReprovacao() {
+        int indDisc = 0;
+        int maior = 0;
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            int cont = 0;
+            for (int j = 0; j < estud.qtosDados; j++) {
+                if (estud.valorDe(j).getNotas()[i] < 5)
+                    cont++;
+            }
+            if (cont > maior) {
+                maior = cont;
+                indDisc = i;
+            }
+        }
+        return disciplinas[indDisc];
+    }
+
+    private static Estudante estudMaiorMedia() {
+        int indEst = 0;
+        double maior = 0;
+        for (int i = 0; i < estud.qtosDados; i++) {
+            double media = estud.valorDe(i).mediaDasNotas();
+            if (media > maior) {
+                maior = media;
+                indEst = i;
+            }
+        }
+        return estud.valorDe(indEst);
+    }
+
+    private static String maiorNota() {
+        int indDisc = 0;
+        double maior = 0;
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            double nota = 0;
+            for (int j = 0; j < estud.qtosDados; j++) {
+                if (estud.valorDe(j).getNotas()[i] > nota)
+                    nota = estud.valorDe(j).getNotas()[i];
+            }
+            if (nota > maior) {
+                maior = nota;
+                indDisc = i;
+            }
+        }
+        return disciplinas[indDisc];
+    }
+    
+    private static String menorNota() {
+        int indDisc = 0;
+        double menor = 10;
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            double nota = 10;
+            for (int j = 0; j < estud.qtosDados; j++) {
+                if (estud.valorDe(j).getNotas()[i] < nota)
+                    nota = estud.valorDe(j).getNotas()[i];
+            }
+            if (nota < menor) {
+                menor = nota;
+                indDisc = i;
+            }
+        }
+        return disciplinas[indDisc];
+    }
+
+    private static void mediasEstudantes() {
+        out.println("Média aritmética dos alunos em cada disciplina:");
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            double soma = 0;
+            for (int j = 0; j < estud.qtosDados; j++)
+                soma += estud.valorDe(j).getNotas()[i];
+            out.printf("%s: %.2f\n", disciplinas[i], soma / estud.qtosDados);
+        }
+        out.println();
+    }
+
+    private static Estudante maiorNotaMenorMedia() {
+        int indDisc = 0;
+        double menorMedia = 10;
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            double media = 0;
+            for (int j = 0; j < estud.qtosDados; j++)
+                media += estud.valorDe(j).getNotas()[i];
+            media /= estud.qtosDados;
+            if (media < menorMedia) {
+                menorMedia = media;
+                indDisc = i;
+            }
+        }
+        double maiorNota = 0;
+        int indEst = 0;
+        for (int i = 0; i < estud.qtosDados; i++) {
+            double nota = estud.valorDe(i).getNotas()[indDisc];
+            if (nota > maiorNota) {
+                maiorNota = nota;
+                indEst = i;
+            }
+        }
+        return estud.valorDe(indEst);
+    }
+
+    private static Estudante menorNotaMaiorMedia() {
+        int indDisc = 0;
+        double maiorMedia = 0;
+        for (int i = 0; i < qtsDisciplinas; i++) {
+            double media = 0;
+            for (int j = 0; j < estud.qtosDados; j++)
+                media += estud.valorDe(j).getNotas()[i];
+            media /= estud.qtosDados;
+            if (media > maiorMedia) {
+                maiorMedia = media;
+                indDisc = i;
+            }
+        }
+        double menorNota = 10;
+        int indEst = 0;
+        for (int i = 0; i < estud.qtosDados; i++) {
+            double nota = estud.valorDe(i).getNotas()[indDisc];
+            if (nota < menorNota) {
+                menorNota = nota;
+                indEst = i;
+            }
+        }
+        return estud.valorDe(indEst);
     }
 }
