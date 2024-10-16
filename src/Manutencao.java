@@ -384,9 +384,13 @@ public class Manutencao {
         out.println("Média aritmética dos alunos em cada disciplina:");
         for (int i = 0; i < qtsDisciplinas; i++) {
             double soma = 0;
+            int qts = 0;
             for (int j = 0; j < estud.qtosDados; j++)
-                soma += estud.valorDe(j).getNotas()[i];
-            out.printf("%s: %.2f\n", disciplinas[i], soma / estud.qtosDados);
+                if (i < estud.valorDe(j).getQuantasNotas()) { // verifica se o estudante tem nota nessa disciplina
+                    soma += estud.valorDe(j).getNotas()[i];
+                    qts++;
+                }
+            out.printf("%s: %.2f\n", disciplinas[i], soma / qts);
         }
         out.println();
     }
@@ -396,9 +400,13 @@ public class Manutencao {
         double menorMedia = 10;
         for (int i = 0; i < qtsDisciplinas; i++) {
             double media = 0;
+            int qts = 0;
             for (int j = 0; j < estud.qtosDados; j++)
-                media += estud.valorDe(j).getNotas()[i];
-            media /= estud.qtosDados;
+                if (i < estud.valorDe(j).getQuantasNotas()) {
+                    media += estud.valorDe(j).getNotas()[i];
+                    qts++;
+                }
+            media /= qts;
             if (media < menorMedia) {
                 menorMedia = media;
                 indDisc = i;
@@ -421,9 +429,13 @@ public class Manutencao {
         double maiorMedia = 0;
         for (int i = 0; i < qtsDisciplinas; i++) {
             double media = 0;
+            int qts = 0;
             for (int j = 0; j < estud.qtosDados; j++)
-                media += estud.valorDe(j).getNotas()[i];
-            media /= estud.qtosDados;
+                if (i < estud.valorDe(j).getQuantasNotas()) {
+                    media += estud.valorDe(j).getNotas()[i];
+                    qts++;
+                }
+            media /= qts;
             if (media > maiorMedia) {
                 maiorMedia = media;
                 indDisc = i;
